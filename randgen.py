@@ -13,7 +13,9 @@ def main():
         retrieved = input("Please enter the length of password required: ")
         try:
             length = int(retrieved)
-            break
+            if length > 0:
+                break
+            print("Error - not a positive integer, please try again.")
         except ValueError:
             print("Error - the length entered not an integer, please try again.")
     
@@ -29,7 +31,17 @@ def main():
         else:
             print("Error - invalid requirements, please try again.")
     
-    password = ''.join(secrets.choice(chars) for _ in range(length))
+    reqLength = len(requirements)
+    pwList = []
+    for i in range(length):
+        if i < reqLength - 1:
+            # Ensures that each required character set has at least 1 characters in the password generated.
+            pwList.append(secrets.choice(selections[requirements[i]]))
+        else:
+            pwList.append(secrets.choice(chars))
+    random.shuffle(pwList)
+    password = ''.join(pwList)
+
     pyperclip.copy(password)
     print(f"The password generated is: {password}, password copied to clipboard for future use.")
 
