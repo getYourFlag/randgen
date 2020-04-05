@@ -1,4 +1,4 @@
-import random, pyperclip
+import random, pyperclip, secrets
 
 def main():
     selections = {
@@ -29,7 +29,7 @@ def main():
         else:
             print("Error - invalid requirements, please try again.")
     
-    password = ''.join([chars[random.randint(0, len(chars)-1)] for _ in range(length)])
+    password = ''.join(secrets.choice(chars) for _ in range(length))
     pyperclip.copy(password)
     print(f"The password generated is: {password}, password copied to clipboard for future use.")
 
