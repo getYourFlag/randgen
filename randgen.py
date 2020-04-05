@@ -1,59 +1,37 @@
-import random
-import pyperclip
+import random, pyperclip
 
 def main():
-    uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-    lowercase = [letter.lower() for letter in uppercase]
-    numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    seperator = [" ", "-", "_"]
-    specialChars = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", ":", "<", ">", "?", "/"]
-    length = 0
-    requirement = ""
-    password = ""
-    selectedList = []
+    selections = {
+        "1": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", # Uppercase
+        "2": "abcdefghijklmnopqrstuvwxyz", # Lowercase
+        "3": "1234567890", # Numbers
+        "4": "-_", # Seperators
+        "5": "!@#$%^&*():<>?/.,[]" # Special Characters
+    }
     
-    while (length == 0):
+    while True:
         retrieved = input("Please enter the length of password required: ")
         try:
             length = int(retrieved)
+            break
         except ValueError:
-            print("Error - not an integer.")
+            print("Error - the length entered not an integer, please try again.")
     
     print("Please enter the requirements of the password. One character represents one type of requirement.")
     print(" 1 - Uppercase \n 2 - Lowercase \n 3 - Numbers \n 4 - Seperators \n 5 - Special Characters")
 
-    while (requirement == ""):
-        answer = input("Requirements: ")
-        if checkReq(answer):
-            requirement = answer
+    while True:
+        requirements = input("Requirements: ")
+        invalidReqs = [char for char in requirements if char not in "12345"]
+        if len(invalidReqs) == 0:
+            chars = ''.join([selections[char] for char in requirements])
+            break
         else:
-            print("Invalid requirements, please try again.")
+            print("Error - invalid requirements, please try again.")
     
-    for c in requirement:
-        if c == "1": 
-            selectedList += uppercase
-        elif c == "2":
-            selectedList += lowercase
-        elif c == "3":
-            selectedList += numbers
-        elif c == "4":
-            selectedList += seperator
-        elif c == "5":
-            selectedList += specialChars
-    
-    for _ in range(length):
-        pos = random.randint(0, len(selectedList)-1)
-        password += selectedList[pos]
-
-    print(f"The password generated is: {password}, password copied to clipboard for future use.")
-
+    password = ''.join([chars[random.randint(0, len(chars)-1)] for _ in range(length)])
     pyperclip.copy(password)
-
-def checkReq(string):
-    for letter in string:
-        if letter not in ["1", "2", "3", "4", "5"]:
-            return False
-    return True
+    print(f"The password generated is: {password}, password copied to clipboard for future use.")
 
 if __name__ == "__main__":
     main()
